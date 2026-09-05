@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+.git
+.gitignore
+.env
+.env.*
+tests
+vitest.config.ts
+*.log
+.DS_Store
+**/*-key.json
+**/credentials*.json
+**/service-account*.json
+container.file

@@ -1,0 +1,149 @@
+# SEM/SEO operating contract — Uniiku
+# Fase 0 aceptada 2026-09-03. Sin secretos, JSON keys ni tokens.
+# write_enabled: false hasta frase explícita "activa escritura fase 4"
+
+schema_version: 0.1
+status: fase1_closed_fase2_starting
+write_enabled: false
+
+open_items:
+  - ga4.primary_conversion  # Iñigo no la tiene aún; informes de conversión quedan en hold
+  - ads.account             # no hay cuenta Ads; tools Ads se implementan en stub hasta abrirla
+
+site:
+  canonical_host: uniiku.net
+  canonical_origin: https://uniiku.net
+  www_policy: apex
+  locales: [es, en]
+  default_locale: en
+  url_pattern: "/{locale}/"
+  out_of_scope:
+    - app.uniiku.net
+    - test.uniiku.net
+    - art.uniiku.net
+  hreflang: true
+
+ga4:
+  account_id: "1187809"
+  property_id: "properties/5115655661"
+  property_display_name: uniiku
+  timezone: Europe/Madrid
+  currency: EUR
+  primary_conversion:
+    ga4_event_name: ""        # NO DISPONIBLE — no inventar
+    ads_conversion_name: ""   # NO DISPONIBLE — no hay cuenta Ads
+  secondary_conversions: []
+
+gsc:
+  property: "sc-domain:uniiku.net"
+  property_type: domain       # derivado de sc-domain:
+  owner_email: luna1999@gmail.com
+  bulk_export_dataset: searchconsole_uniiku
+  bulk_export_location: europe-west1
+
+ads:
+  mcc_id: ""
+  customer_ids: []            # AÚN NO HAY CUENTA ADS
+  currency: EUR               # aceptado hasta datos reales
+  timezone: Europe/Madrid     # aceptado hasta datos reales
+  monthly_budget: null        # sin techo → no se mueven presupuestos
+  daily_spend_change_cap_pct: null
+  max_mutations_per_day: 5
+  brand_terms:
+    - uniiku
+    - uniiku.net
+  untouchable_campaigns: []
+  untouchable_ad_groups: []
+  developer_token_status: unknown
+  status: not_opened          # se rellena al abrir la cuenta
+
+
+metricool:
+  # Instagram = fuente de verdad social. Web Metricool = cruce vs GA4, nunca SoT.
+  # Token (userToken) NO va aquí: Secret Manager en fase 1.
+  # API: https://app.metricool.com/api  header X-Mc-Auth + query userId & blogId
+  # MCP oficial Metricool (no es nuestra tubería): https://ai.metricool.com/mcp
+  status: free_mcp_only
+  plan: free                  # API REST no disponible; MCP oficial sí
+  user_id: "2416762"
+  blog_id: "3031998"
+  instagram_handle: "@uniiku_tag"
+  connected_networks:
+    - instagram
+    - threads
+    - web
+  web_data_policy: cross_check_only   # no sustituye GA4/GSC
+  instagram_data_policy: source_of_truth
+  threads_handle: "@uniiku_tag"
+  threads_data_policy: source_of_truth
+  timezone: Europe/Madrid
+  secret_name: metricool-user-token   # Secret Manager; no pegar el token en chat
+  grok_custom_connector:
+    name: metricool
+    url: https://ai.metricool.com/mcp
+    auth: oauth
+    role: social_read_bridge      # IG + Threads; no es la tubería SEM/SEO; REST propio = Advanced+
+
+geo:
+  target_countries: [ES]      # aceptado hasta datos reales
+  target_languages: [es, en]
+
+repo:
+  host: github
+  url: https://github.com/luna-1999/uniiku_landing
+  default_branch: main
+  working_branch_prefix: seo/
+  pr_required: true
+  merge_to_main_requires_ok: true
+  seo_safe_changes:
+    - title
+    - meta_description
+    - h1
+    - intro_copy
+    - internal_links
+    - json_ld
+    - redirects_in_config
+  unsafe_without_extra_ok:
+    - force_push
+    - merge_to_main
+    - robots_txt
+    - sitemap_generation
+    - massive_indexation
+  max_large_seo_prs_per_day: 1
+  max_small_seo_prs_per_day: 3
+
+gcp:
+  project_id: sem-seo-uniiku
+  # project_number: ""  # ~12 dígitos; el valor 103911784639989275966 parece SA unique ID, no project number
+  sa_unique_id_reported: "103911784639989275966"  # Iñigo 2026-09-06; verificar
+  billing_active: true        # pasos 1–7 hechos 2026-09-06
+  region: europe-west1
+  fase1_status: closed_bq_connector_deferred
+  fase1_ads_transfer: deferred  # paso 8 aplazado hasta Ads
+  datasets:
+    ga4: analytics_5115655661 # nombre esperado del export GA4; no existe aún
+    gsc: searchconsole_uniiku
+    ads: ""                   # Data Transfer Service cuando haya cuenta Ads
+    metricool: metricool_uniiku  # ingest opcional más adelante; no existe aún
+  service_accounts:
+    reader: sa-sem-seo-reader@sem-seo-uniiku.iam.gserviceaccount.com  # confirmado 2026-09-06
+    writer: ""                # no crear hasta fase 4
+  secret_store: secret_manager
+
+mcp:
+  host: cloud_run
+  url: ""                     # se rellena al final de fase 2
+  auth: bearer
+  write_flag: false
+
+thresholds:
+  min_impressions_to_claim: 100
+  min_clicks_to_claim: 30
+  anomaly_pct_vs_baseline: null
+  measurement_window_days: 14
+  measurement_window_conversions: 50
+
+ops:
+  changelog: ops/changelog.md
+  runbook: ops/RUNBOOK.md
+  weekly_report_weekday: 1    # lunes, fase 5 — no activar aún

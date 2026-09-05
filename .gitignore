@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.pem
+*.json.key
+*-key.json
+service-account*.json
+credentials*.json
+.DS_Store
+*.log
+.vite/
+.turbo/

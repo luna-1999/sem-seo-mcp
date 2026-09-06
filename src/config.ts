@@ -26,7 +26,7 @@ export interface EnvConfig {
 }
 
 export function loadEnv(): EnvConfig {
-  const token = process.env.MCP_BEARER_TOKEN ?? "";
+  const token = (process.env.MCP_BEARER_TOKEN ?? "").trim();
   return {
     port: Number(process.env.PORT || process.env.MCP_PORT || 8080),
     writeEnabled: parseBool(process.env.WRITE_ENABLED, false),

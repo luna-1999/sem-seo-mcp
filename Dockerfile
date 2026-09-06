@@ -7,8 +7,6 @@ COPY config ./config
 COPY src ./src
 RUN npm install
 RUN npm run build
-RUN mkdir -p /app/config
-RUN cp config/sem-seo.contract.yaml /app/config/
 
 FROM node:22-slim AS runtime
 WORKDIR /app

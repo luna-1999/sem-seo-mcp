@@ -36,8 +36,8 @@ Tools MCP requieren `Authorization: Bearer <MCP_BEARER_TOKEN>`.
 ## Incidentes comunes
 
 1. **401 bearer** — Bearer ausente/distinto del secret.
-2. **BQ dataset not found** — `searchconsole_uniiku` / `analytics_5115655661` ausentes; fallback APIs.
-3. **GA4 403 / PERMISSION_DENIED SA** — SA sin rol en `properties/5115655661`.
+2. **BQ dataset not found** — `searchconsole_uniiku` / `analytics_511565561` ausentes; fallback APIs.
+3. **GA4 403 / PERMISSION_DENIED SA** — SA sin rol en `properties/511565561`.
 4. **Free SQL rejected / unknown saved query** — Solo catálogo `sql/saved/`.
 5. **Ads stub** — Esperado hasta abrir cuenta.
 6. **`github_configured: false`** — Sin token GitHub.

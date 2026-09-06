@@ -32,7 +32,7 @@ export function loadEnv(): EnvConfig {
     writeEnabled: parseBool(process.env.WRITE_ENABLED, false),
     gcpProject: process.env.GCP_PROJECT || "sem-seo-uniiku",
     bqLocation: process.env.BQ_LOCATION || "europe-west1",
-    ga4PropertyId: process.env.GA4_PROPERTY_ID || "properties/5115655661",
+    ga4PropertyId: process.env.GA4_PROPERTY_ID || "properties/511565561",
     gscSiteUrl: process.env.GSC_SITE_URL || "sc-domain:uniiku.net",
     mcpBearerToken: token,
     githubToken: process.env.GITHUB_TOKEN || undefined,

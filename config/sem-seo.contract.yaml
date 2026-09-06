@@ -4,7 +4,7 @@
 
 schema_version: 0.1
 status: fase2_closed_fase3_in_progress
-# Cloud Run live 2026-09-06; BQ datasets may still be missing (searchconsole_uniiku / analytics_5115655661).
+# Cloud Run live 2026-09-06; BQ datasets may still be missing (searchconsole_uniiku / analytics_511565561).
 write_enabled: false
 
 open_items:
@@ -26,7 +26,7 @@ site:
 
 ga4:
   account_id: "1187809"
-  property_id: "properties/5115655661"
+  property_id: "properties/511565561"
   property_display_name: uniiku
   timezone: Europe/Madrid
   currency: EUR
@@ -122,7 +122,7 @@ gcp:
   fase1_status: closed_bq_connector_deferred
   fase1_ads_transfer: deferred  # paso 8 aplazado hasta Ads
   datasets:
-    ga4: analytics_5115655661 # nombre esperado del export GA4; no existe aún
+    ga4: analytics_511565561 # export GA4 confirmado 2026-09-06 (property 511565561)
     gsc: searchconsole_uniiku
     ads: ""                   # Data Transfer Service cuando haya cuenta Ads
     metricool: metricool_uniiku  # ingest opcional más adelante; no existe aún

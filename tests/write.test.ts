@@ -8,7 +8,7 @@ function baseEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     writeEnabled: false,
     gcpProject: "sem-seo-uniiku",
     bqLocation: "europe-west1",
-    ga4PropertyId: "properties/5115655661",
+    ga4PropertyId: "properties/511565561",
     gscSiteUrl: "sc-domain:uniiku.net",
     mcpBearerToken: "test",
     githubRepo: "luna-1999/uniiku_landing",

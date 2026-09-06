@@ -52,7 +52,7 @@ Metricool social: https://ai.metricool.com/mcp (OAuth). This server does not cal
 WRITE_ENABLED=false
 GCP_PROJECT=sem-seo-uniiku
 BQ_LOCATION=europe-west1
-GA4_PROPERTY_ID=properties/5115655661
+GA4_PROPERTY_ID=properties/511565561
 GSC_SITE_URL=sc-domain:uniiku.net
 GITHUB_REPO=luna-1999/uniiku_landing
 PORT=8080

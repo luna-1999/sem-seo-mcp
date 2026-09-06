@@ -5,7 +5,7 @@ SELECT
   traffic_source.medium AS medium,
   COUNT(*) AS events,
   COUNT(DISTINCT user_pseudo_id) AS users
-FROM `{{gcp_project}}.analytics_5115655661.events_*`
+FROM `{{gcp_project}}.analytics_511565561.events_*`
 WHERE _TABLE_SUFFIX BETWEEN
   FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY))
   AND FORMAT_DATE('%Y%m%d', CURRENT_DATE())

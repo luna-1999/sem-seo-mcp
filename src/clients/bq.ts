@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { BigQuery } from "@google-cloud/bigquery";
 import type { EnvConfig } from "../config.js";
 
-const ALLOWED_DATASETS = new Set(["analytics_5115655661", "searchconsole_uniiku"]);
+const ALLOWED_DATASETS = new Set(["analytics_511565561", "searchconsole_uniiku"]);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 /** sql/saved relative to package root (src/clients -> ../../sql/saved; dist/clients -> same). */

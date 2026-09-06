@@ -1,37 +1,59 @@
+import { readFileSync, existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { BigQuery } from "@google-cloud/bigquery";
 import type { EnvConfig } from "../config.js";
 
 const ALLOWED_DATASETS = new Set(["analytics_5115655661", "searchconsole_uniiku"]);
 
-export const SAVED_QUERIES: Record<
-  string,
-  (params: Record<string, unknown>, env: EnvConfig) => { sql: string; params: Record<string, unknown> }
-> = {
+const __dirname = dirname(fileURLToPath(import.meta.url));
+/** sql/saved relative to package root (src/clients -> ../../sql/saved; dist/clients -> same). */
+const SAVED_SQL_DIR = join(__dirname, "..", "..", "sql", "saved");
+
+export type SavedQueryBuilder = (
+  params: Record<string, unknown>,
+  env: EnvConfig,
+) => { sql: string; params: Record<string, unknown> };
+
+/**
+ * Allowlist map: name -> optional params builder.
+ * SQL body is loaded from sql/saved/{name}.sql; {{gcp_project}} / __GCP_PROJECT__ are injected.
+ */
+export const SAVED_QUERIES: Record<string, SavedQueryBuilder> = {
   gsc_28d_summary: (_params, env) => ({
-    sql: `
-SELECT
-  COUNT(*) AS row_count,
-  SUM(clicks) AS clicks,
-  SUM(impressions) AS impressions,
-  SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) AS avg_position
-FROM \`${env.gcpProject}.searchconsole_uniiku.searchdata_site_impression\`
-WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND CURRENT_DATE()
-`.trim(),
+    sql: loadSavedSql("gsc_28d_summary", env),
     params: {},
   }),
   ga4_28d_sessions: (_params, env) => ({
-    sql: `
-SELECT
-  COUNT(*) AS event_rows,
-  COUNT(DISTINCT user_pseudo_id) AS approx_users
-FROM \`${env.gcpProject}.analytics_5115655661.events_*\`
-WHERE _TABLE_SUFFIX BETWEEN
-  FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY))
-  AND FORMAT_DATE('%Y%m%d', CURRENT_DATE())
-`.trim(),
+    sql: loadSavedSql("ga4_28d_sessions", env),
+    params: {},
+  }),
+  gsc_28d_by_page: (_params, env) => ({
+    sql: loadSavedSql("gsc_28d_by_page", env),
+    params: {},
+  }),
+  ga4_28d_channels: (_params, env) => ({
+    sql: loadSavedSql("ga4_28d_channels", env),
     params: {},
   }),
 };
+
+function loadSavedSql(name: string, env: EnvConfig): string {
+  const path = join(SAVED_SQL_DIR, `${name}.sql`);
+  if (!existsSync(path)) {
+    throw new Error(
+      `Saved SQL file missing for query "${name}": expected ${path}. Add mcp/sql/saved/${name}.sql`,
+    );
+  }
+  const raw = readFileSync(path, "utf8");
+  return injectProject(raw, env.gcpProject).trim();
+}
+
+function injectProject(sql: string, gcpProject: string): string {
+  return sql
+    .replaceAll("{{gcp_project}}", gcpProject)
+    .replaceAll("__GCP_PROJECT__", gcpProject);
+}
 
 let bq: BigQuery | null = null;
 
@@ -109,4 +131,4 @@ function extractDatasets(sql: string): string[] {
   return [...found];
 }
 
-export { ALLOWED_DATASETS };
+export { ALLOWED_DATASETS, SAVED_SQL_DIR, loadSavedSql, injectProject };

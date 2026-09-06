@@ -3,7 +3,8 @@
 # write_enabled: false hasta frase explícita "activa escritura fase 4"
 
 schema_version: 0.1
-status: fase1_closed_fase2_starting
+status: fase2_closed_fase3_in_progress
+# Cloud Run live 2026-09-06; BQ datasets may still be missing (searchconsole_uniiku / analytics_5115655661).
 write_enabled: false
 
 open_items:

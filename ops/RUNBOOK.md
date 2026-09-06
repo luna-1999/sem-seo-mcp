@@ -1,39 +1,48 @@
-# RUNBOOK — Uniiku SEM/SEO MCP
+# RUNBOOK — Uniiku SEM/SEO MCP (mcp/ops)
 
-Stub operativo. Completar tras el primer deploy a Cloud Run.
+**SoT:** `../../ops/RUNBOOK.md` (repo monorepo local `/workspace/sem-seo/ops/RUNBOOK.md`).
 
-## Servicio
+Este fichero se mantiene alineado con el SoT para el árbol `mcp/` / imagen. Si hay divergencia, gana el SoT en `ops/RUNBOOK.md`.
 
-- Region: europe-west1
-- Proyecto GCP: sem-seo-uniiku
-- SA reader: sa-sem-seo-reader@sem-seo-uniiku.iam.gserviceaccount.com
-- WRITE_ENABLED=false (no activar sin frase explicita de fase 4)
+## Servicio (live)
+
+| Campo | Valor |
+|---|---|
+| URL Cloud Run | `https://sem-seo-mcp-663802723424.europe-west1.run.app` |
+| MCP endpoint | `https://sem-seo-mcp-663802723424.europe-west1.run.app/mcp` |
+| Región | `europe-west1` |
+| Proyecto GCP | `sem-seo-uniiku` |
+| SA reader | `sa-sem-seo-reader@sem-seo-uniiku.iam.gserviceaccount.com` |
+| `WRITE_ENABLED` | **`false`** — no activar sin la frase exacta «activa escritura fase 4» |
+
+Live desde **2026-09-06**. Datasets BQ pueden seguir ausentes (ver incidentes).
+
+## Connector Grok
+
+- Nombre: `user-uniiku-sem-seo`
+- Proxy: `/home/box/sem-seo-mcp-connector/proxy.py`
+- Bearer: box-secrets `UNIUKU_SEM_SEO_MCP_BEARER` (no pegar en chat ni en git)
+
+Social (IG/Threads): conector Metricool hosted / `user-metricool` (`blogId` 3031998), plan Free.
 
 ## Probes
 
-- Liveness/Readiness: GET /health (publico, sin bearer)
+```bash
+curl -sS https://sem-seo-mcp-663802723424.europe-west1.run.app/health
+```
 
-## Auth
-
-- Tools MCP: Authorization Bearer MCP_BEARER_TOKEN
-- Token en Secret Manager (ej. mcp-bearer-token)
-
-## Secretos (Secret Manager)
-
-| Secret | Uso |
-|--------|-----|
-| mcp-bearer-token | Bearer inbound Grok to MCP |
-| sa-sem-seo-reader | JSON key SA (montar como fichero; GOOGLE_APPLICATION_CREDENTIALS) |
-| github-token | Opcional, repo tools |
-| metricool-user-token | No usar en Free REST; reservado |
+Tools MCP requieren `Authorization: Bearer <MCP_BEARER_TOKEN>`.
 
 ## Incidentes comunes
 
-1. 401 en /mcp — Bearer ausente o distinto del secret.
-2. GA4/GSC/BQ credentials missing — ADC / GOOGLE_APPLICATION_CREDENTIALS no montado o SA sin roles.
-3. bq_run_saved_query unknown / free SQL — Solo gsc_28d_summary y ga4_28d_sessions.
-4. Ads not_configured — Esperado hasta abrir cuenta Ads.
+1. **401 bearer** — Bearer ausente/distinto del secret.
+2. **BQ dataset not found** — `searchconsole_uniiku` / `analytics_5115655661` ausentes; fallback APIs.
+3. **GA4 403 / PERMISSION_DENIED SA** — SA sin rol en `properties/5115655661`.
+4. **Free SQL rejected / unknown saved query** — Solo catálogo `sql/saved/`.
+5. **Ads stub** — Esperado hasta abrir cuenta.
+6. **`github_configured: false`** — Sin token GitHub.
+7. **Credenciales Google missing** — ADC / runtime SA.
 
 ## Rollback
 
-Redeploy imagen anterior; no hay migraciones de schema propias.
+Redeploy imagen anterior. Mantener `WRITE_ENABLED=false`.

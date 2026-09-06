@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY tsconfig.json ./
 COPY config ./config
+COPY sql ./sql
 COPY src ./src
 RUN npm install
 RUN npm run build
@@ -19,6 +20,7 @@ RUN npm install --omit=dev
 RUN npm cache clean --force
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/config ./config
+COPY --from=build /app/sql ./sql
 USER node
 EXPOSE 8080
 CMD ["node", "dist/index.js"]
